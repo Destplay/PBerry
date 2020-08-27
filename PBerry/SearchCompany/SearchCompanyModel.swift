@@ -12,6 +12,7 @@ import CoreLocation
 protocol SearchCompanyPresenterDataSource: class {
     func setSort(sort: SortType)
     func fetchCompanyList(_ value: String, location: CLLocationCoordinate2D?)
+    func getCompany(index: Int) -> SearchCompanyResponse.Content?
 }
 
 protocol SearchCompanyViewDelegate: class {
@@ -43,10 +44,10 @@ struct SearchCompanyRequest: Encodable {
     }
 }
 
-struct SearchCompanyResponse: Decodable {
-    let status: String
+struct SearchCompanyResponse: RootResponse {
+    var status: String
+    var errorText: String?
     let content: [Content]?
-    let errorText: String?
     
     struct Content: Decodable {
         let companyId: Int?
@@ -89,7 +90,7 @@ struct CompanyViewModel {
         self.companyName = company.companyName ?? ""
         self.distance = "🧭 \(String(format: "%.3f", company.distance ?? 0.0)) км"
         self.price = "\(company.price?.description ?? "") ₽"
-        self.image = Config.url + (company.image?.description ?? "")
+        self.image = Config.url + (company.image ?? "")
         self.rating = "⭐️ \(company.rating?.description ?? "")"
     }
 }

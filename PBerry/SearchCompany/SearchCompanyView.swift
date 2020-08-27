@@ -38,6 +38,14 @@ class SearchCompanyView: UIViewController {
         self.find()
     }
 
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if let controller = segue.destination as? DetailCompanyView {
+            guard let index = sender as? Int, self.list.count > index, let company = self.dataSource?.getCompany(index: index) else { return }
+            controller.company = company
+            controller.location = self.currentLocation
+        }
+    }
+    
     func setFind(value: String) {
         self.findValue = value
     }
@@ -52,6 +60,7 @@ class SearchCompanyView: UIViewController {
         self.searchController.searchBar.placeholder = "Название товара"
         self.navigationItem.searchController = self.searchController
         self.definesPresentationContext = true
+        self.tableView?.isHidden = self.list.isEmpty
     }
     
     private func find() {
@@ -111,8 +120,12 @@ extension SearchCompanyView: UITableViewDataSource {
 extension SearchCompanyView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
         if let cell = cell as? CompanyViewCell {
-            cell.setup(product: self.list[indexPath.row])
+            cell.setup(company: self.list[indexPath.row])
         }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        self.performSegue(withIdentifier: "DetailCompanySegue", sender: indexPath.row)
     }
 }
 

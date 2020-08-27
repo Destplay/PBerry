@@ -16,7 +16,7 @@ class CompanyServices {
     }
     
     func fetchCompany(model: SearchCompanyRequest, successful: @escaping ([SearchCompanyResponse.Content]) -> (), failure: @escaping (NSError) -> ()) {
-        let url = Config.url + "api/"
+        let url = Config.url + "/api/"
         self.networkManager.requestService(url: url, method: .apiCompany, model: model, successful: { (response: SearchCompanyResponse) in
             guard let list = response.content else { return }
             successful(list)

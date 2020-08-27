@@ -40,12 +40,18 @@ extension SearchCompanyPresenter: SearchCompanyPresenterDataSource {
         self.findValue = value
         self.location = location
         let model = SearchCompanyRequest(findValue: value, sort: self.sort.rawValue, latloc: location?.latitude, lonloc: location?.longitude)
-        ServiceLocator.shared.getProductsServices().fetchCompany(model: model, successful: { list in
+        ServiceLocator.shared.getCompanyServices().fetchCompany(model: model, successful: { list in
             self.list = list
             let list = self.mapping(list: list)
             self.delegate?.response(list: list)
         }, failure: { error in
             self.delegate?.response(error: error)
         })
+    }
+    
+    func getCompany(index: Int) -> SearchCompanyResponse.Content? {
+        guard self.list.count > index else { return nil }
+        
+        return self.list[index]
     }
 }

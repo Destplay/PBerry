@@ -16,7 +16,7 @@ class NetworkManager {
         guard let url = URL(string: urlString) else { return }
         
         guard var parameters: Dictionary = try? model.asDictionary() else { return }
-        parameters.updateValue("4v323KR44y", forKey: "secret_key")
+        parameters.updateValue(Config.apiKey, forKey: "secret_key")
         Log.i(parameters, tag: "PARAMETERS - \(method.rawValue)")
         AF.request(url, method: .post, parameters: parameters).responseJSON { response in
             do {

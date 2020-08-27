@@ -10,17 +10,17 @@ import UIKit
 
 class CompanyViewCell: UITableViewCell {
     
-    @IBOutlet weak var logo: UIImageView!
-    @IBOutlet weak var name: UILabel!
-    @IBOutlet weak var price: UILabel!
-    @IBOutlet weak var distance: UILabel!
-    @IBOutlet weak var rating: UILabel!
+    @IBOutlet weak var logoImageView: UIImageView!
+    @IBOutlet weak var nameLabel: UILabel!
+    @IBOutlet weak var priceLabel: UILabel!
+    @IBOutlet weak var distanceLabel: UILabel!
+    @IBOutlet weak var ratingLabel: UILabel!
     
-    func setup(product: CompanyViewModel) {
-        self.logo.downloaded(from: product.image)
-        self.name.text = product.companyName
-        self.price.text = product.price
-        self.distance.text = product.distance
-        self.rating.text = product.rating
+    func setup(company: CompanyViewModel) {
+        self.logoImageView.downloaded(from: company.image)
+        self.nameLabel.text = company.companyName
+        self.priceLabel.text = company.price
+        self.distanceLabel.text = company.distance
+        self.ratingLabel.text = company.rating
     }
 }

@@ -15,8 +15,9 @@ class ServiceLocator {
     let networkManager = NetworkManager()
     
     var companyServices: CompanyServices?
+    var detailServices: DetailCompanyServices?
     
-    func getProductsServices() -> CompanyServices {
+    func getCompanyServices() -> CompanyServices {
         if let services = self.companyServices {
             
             return services
@@ -24,5 +25,15 @@ class ServiceLocator {
         self.companyServices = CompanyServices(self.networkManager)
         
         return self.companyServices ?? CompanyServices(self.networkManager)
+    }
+    
+    func getDetailCompanyServices() -> DetailCompanyServices {
+        if let services = self.detailServices {
+            
+            return services
+        }
+        self.detailServices = DetailCompanyServices(self.networkManager)
+        
+        return self.detailServices ?? DetailCompanyServices(self.networkManager)
     }
 }

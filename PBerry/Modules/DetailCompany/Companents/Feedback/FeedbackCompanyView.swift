@@ -70,7 +70,7 @@ class FeedbackCompanyView: UIViewController {
                 self.delegate?.feedbackCompany(didPositive: FeedbackModel(name: alert.textFields?.first?.text ?? "", message: alert.textFields?.last?.text ?? ""))
             }),
             UIAlertAction(title: "Отрицательный 👎🏼", style: .destructive, handler: { action in
-                self.delegate?.feedbackCompany(didPositive: FeedbackModel(name: alert.textFields?.first?.text ?? "", message: alert.textFields?.last?.text ?? ""))
+                self.delegate?.feedbackCompany(didNegative: FeedbackModel(name: alert.textFields?.first?.text ?? "", message: alert.textFields?.last?.text ?? ""))
             }),
             UIAlertAction(title: "Отмена", style: .cancel)
         ]
@@ -107,5 +107,9 @@ extension FeedbackCompanyView: UITableViewDelegate {
             guard let comment = self.dataSource?.feedbackCompany(indexPath.row) else { return }
             cell.setup(comment)
         }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }

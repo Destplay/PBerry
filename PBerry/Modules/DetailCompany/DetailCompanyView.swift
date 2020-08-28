@@ -18,7 +18,7 @@ class DetailCompanyView: UIViewController {
     @IBOutlet weak var infoCompanyComponent: UIView!
     @IBOutlet weak var feedbackCompanyComponent: UIView!
     
-    var company: SearchCompanyResponse.Content?
+    var company: SearchScreenResponse.Content?
     var location: CLLocation?
     
     private var productViewList: [ProductViewModel]?
@@ -108,19 +108,28 @@ extension DetailCompanyView: ProductListDataSource {
 }
 
 extension DetailCompanyView: ProductListDelegate {
-    func productList(appendToFavorite index: Int) {
+    func productList(appendToShoppingList index: Int) {
+        guard let list = self.productViewList, list.count > index else { return }
         
+        self.dataSource?.save(toShopingList: list[index])
     }
     
     func productList(appendToCart index: Int) {
+        let alertNotification = UIAlertController(title: "Уведомление", message: "На данном этапе разработки, этот функционал не поддерживается", preferredStyle: .alert) 
         
+        let actionCancel = UIAlertAction(title: "Отмена", style: .cancel)
+        alertNotification.addAction(actionCancel)
+        self.present(alertNotification, animated: true)
     }
 }
 
 extension DetailCompanyView: MapCompanyDataSource {
-    func mapCompany(_ mapView: MKMapView) -> CLLocationCoordinate2D? {
+    
+    func mapCompany(_ mapView: MKMapView) -> MapViewModel? {
+        let location = CLLocationCoordinate2D(latitude: self.company?.latloc ?? 0.0, longitude: self.company?.lonloc ?? 0.0)
+        let mapViewModel = MapViewModel(location: location, title: self.company?.companyName, subtitle: self.company?.description)
         
-        return CLLocationCoordinate2D(latitude: self.company?.latloc ?? 0.0, longitude: self.company?.lonloc ?? 0.0)
+        return mapViewModel
     }
 }
 

@@ -9,14 +9,18 @@
 import Foundation
 import CoreLocation
 
-protocol SearchCompanyPresenterDataSource: class {
+protocol SearchScreenPresenterDataSource: class {
     func setSort(sort: SortType)
     func fetchCompanyList(_ value: String, location: CLLocationCoordinate2D?)
-    func getCompany(index: Int) -> SearchCompanyResponse.Content?
+    func getCompany(index: Int) -> SearchScreenResponse.Content?
+    func getShoppingList(_ value: String?)
+    func setShoppingList(index: Int)
+    func removeAllShoppingList()
 }
 
-protocol SearchCompanyViewDelegate: class {
-    func response(list: [CompanyViewModel])
+protocol SearchScreenViewDelegate: class {
+    func response(companyList list: [CompanyViewModel])
+    func response(shoppingList list: [ShoppingListItemViewModel])
     func response(error: NSError)
 }
 
@@ -26,7 +30,11 @@ enum SortType: String {
     case distance = "DISTANCE"
 }
 
-struct SearchCompanyRequest: Encodable {
+enum SearchScreenType: Int {
+    case companyList, notification, shoppingList, cart
+}
+
+struct SearchScreenRequest: Encodable {
     var findValue: String
     var sort: String?
     var latloc: Double
@@ -44,7 +52,7 @@ struct SearchCompanyRequest: Encodable {
     }
 }
 
-struct SearchCompanyResponse: RootResponse {
+struct SearchScreenResponse: RootResponse {
     var status: String
     var errorText: String?
     let content: [Content]?
@@ -86,11 +94,16 @@ struct CompanyViewModel {
     let image: String
     let rating: String
     
-    init(company: SearchCompanyResponse.Content) {
+    init(company: SearchScreenResponse.Content) {
         self.companyName = company.companyName ?? ""
         self.distance = "🧭 \(String(format: "%.3f", company.distance ?? 0.0)) км"
         self.price = "\(company.price?.description ?? "") ₽"
         self.image = Config.url + (company.image ?? "")
         self.rating = "⭐️ \(company.rating?.description ?? "")"
     }
+}
+
+struct ShoppingListItemViewModel {
+    var name: String
+    var status: Bool
 }

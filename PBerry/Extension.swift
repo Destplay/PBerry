@@ -11,7 +11,11 @@ import UIKit
 extension UIImageView {
     func downloaded(from link: String, contentMode mode: UIView.ContentMode = .scaleAspectFit) {
         guard let url = URL(string: link) else { return }
-        downloaded(from: url, contentMode: mode)
+        if let image = CacheManager.shared.getCache(key: link, UIImage.self) {
+            self.image = image
+        } else {
+            downloaded(from: url, contentMode: mode)
+        }
     }
     
     private func downloaded(from url: URL, contentMode mode: UIView.ContentMode = .scaleAspectFit) {
@@ -23,6 +27,7 @@ extension UIImageView {
                 let data = data, error == nil,
                 let image = UIImage(data: data)
                 else { return }
+            CacheManager.shared.appendCache(key: url.absoluteString, value: image)
             DispatchQueue.main.async() { [weak self] in
                 self?.image = image
             }

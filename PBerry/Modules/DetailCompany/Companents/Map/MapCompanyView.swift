@@ -41,7 +41,6 @@ class MapCompanyView: UIViewController {
     private func addMarker(_ location: CLLocationCoordinate2D) {
         let annotation = MKPointAnnotation()
         annotation.title = "Your text here"
-        //You can also add a subtitle that displays under the annotation such as
         annotation.subtitle = "One day I'll go here..."
         annotation.coordinate = location
         self.mapView.addAnnotation(annotation)

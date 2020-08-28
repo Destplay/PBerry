@@ -16,7 +16,8 @@ protocol SearchCompanyPresenterDataSource: class {
 }
 
 protocol SearchCompanyViewDelegate: class {
-    func response(list: [CompanyViewModel])
+    func response(companyList list: [CompanyViewModel])
+    func response(shoppingList list: [ShopingListItemViewModel])
     func response(error: NSError)
 }
 
@@ -24,6 +25,10 @@ enum SortType: String {
     case rating = "RATING"
     case price = "PRICE"
     case distance = "DISTANCE"
+}
+
+enum SearchScreenType: Int {
+    case companyList, notification, shoppingList, cart
 }
 
 struct SearchCompanyRequest: Encodable {
@@ -93,4 +98,9 @@ struct CompanyViewModel {
         self.image = Config.url + (company.image ?? "")
         self.rating = "⭐️ \(company.rating?.description ?? "")"
     }
+}
+
+struct ShopingListItemViewModel {
+    var name: String
+    var status: Bool
 }

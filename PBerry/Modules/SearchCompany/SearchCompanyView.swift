@@ -10,15 +10,20 @@ import UIKit
 import CoreLocation
 
 class SearchCompanyView: UIViewController {
-
-    @IBOutlet weak var tableView: UITableView!
         
+    @IBOutlet weak var companyListContainer: UIView!
+    @IBOutlet weak var shopingListContainer: UIView!
+    @IBOutlet weak var tabBar: UITabBar!
+    
     private let locationManager = CLLocationManager()
+    private let searchController = UISearchController(searchResultsController: nil)
     private var currentLocation: CLLocation?
     private var dataSource: SearchCompanyPresenterDataSource?
-    private var list = [CompanyViewModel]()
+    private var companyViewList = [CompanyViewModel]()
+    private var shoppingViewList = [ShopingListItemViewModel]()
     private var findValue: String?
-    private let searchController = UISearchController(searchResultsController: nil)
+    private var companyListView: CompanyListView?
+    private var shoppingListView: ShoppingListView?
     
     override func loadView() {
         super.loadView()
@@ -35,36 +40,59 @@ class SearchCompanyView: UIViewController {
         
         self.dataSource = SearchCompanyPresenter(view: self)
         self.configView()
-        self.find()
+        self.setTab(type: .companyList)
     }
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let controller = segue.destination as? DetailCompanyView {
-            guard let index = sender as? Int, self.list.count > index, let company = self.dataSource?.getCompany(index: index) else { return }
+            guard let index = sender as? Int, self.companyViewList.count > index, let company = self.dataSource?.getCompany(index: index) else { return }
             controller.company = company
             controller.location = self.currentLocation
+        }
+        
+        if let controller = segue.destination as? CompanyListView {
+            controller.dataSource = self
+            controller.delegate = self
+            self.companyListView = controller
+        }
+        
+        if let controller = segue.destination as? ShoppingListView {
+            controller.dataSource = self
+            controller.delegate = self
+            self.shoppingListView = controller
         }
     }
     
     func setFind(value: String) {
         self.findValue = value
+        self.searchController.searchBar.text = value
     }
     
     private func configView() {
-        self.tableView.dataSource = self
-        self.tableView.delegate = self
-        self.tableView.tableFooterView = UIView()
-        self.tableView.reloadData()
         self.searchController.searchResultsUpdater = self
         self.searchController.obscuresBackgroundDuringPresentation = false
         self.searchController.searchBar.placeholder = "Название товара"
         self.navigationItem.searchController = self.searchController
         self.definesPresentationContext = true
-        self.tableView?.isHidden = self.list.isEmpty
+        self.tabBar.delegate = self
     }
     
     private func find() {
         self.dataSource?.fetchCompanyList(self.findValue ?? "Все", location: self.currentLocation?.coordinate)
+    }
+    
+    private func setTab(type: SearchScreenType) {
+        self.companyListContainer.isHidden = true
+        self.shopingListContainer.isHidden = true
+        
+        switch(type) {
+            case .companyList:
+                self.companyListContainer.isHidden = false
+                self.find()
+            case .notification: break
+            case .shoppingList: self.shopingListContainer.isHidden = false
+            case .cart: break
+        }
     }
     
     @IBAction func actionSort(_ sender: Any) {
@@ -92,9 +120,14 @@ extension SearchCompanyView: CLLocationManagerDelegate {
 }
 
 extension SearchCompanyView: SearchCompanyViewDelegate {
-    func response(list: [CompanyViewModel]) {
-        self.list = list
-        self.configView()
+    func response(companyList list: [CompanyViewModel]) {
+        self.companyViewList = list
+        self.companyListView?.updateView()
+    }
+    
+    func response(shoppingList list: [ShopingListItemViewModel]) {
+        self.shoppingViewList = list
+        self.shoppingListView?.updateView()
     }
     
     func response(error: NSError) {
@@ -102,30 +135,22 @@ extension SearchCompanyView: SearchCompanyViewDelegate {
     }
 }
 
-extension SearchCompanyView: UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+extension SearchCompanyView: CompanyListDataSource {
+    func companyList() -> Int {
         
-        return self.list.count
+        return self.companyViewList.count
     }
     
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ProductCellIdentifier") as! CompanyViewCell
+    func companyList(_ index: Int) -> CompanyViewModel? {
+        guard self.companyViewList.count > index else { return nil }
         
-        return cell
+        return self.companyViewList[index]
     }
-    
-    
 }
 
-extension SearchCompanyView: UITableViewDelegate {
-    func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if let cell = cell as? CompanyViewCell {
-            cell.setup(company: self.list[indexPath.row])
-        }
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.performSegue(withIdentifier: "DetailCompanySegue", sender: indexPath.row)
+extension SearchCompanyView: CompanyListDelegate {
+    func companyList(didSelect index: Int) {
+        self.performSegue(withIdentifier: "DetailCompanySegue", sender: index)
     }
 }
 
@@ -133,7 +158,32 @@ extension SearchCompanyView: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         self.findValue = searchController.searchBar.text
         if let text = searchController.searchBar.text, text.count >= 3 {
-            find()
+            self.find()
         }
+    }
+}
+
+extension SearchCompanyView: UITabBarDelegate {
+    func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
+        self.setTab(type: SearchScreenType(rawValue: item.tag) ?? .companyList)
+    }
+}
+
+extension SearchCompanyView: ShoppingListDataSource {
+    func shoppingList() -> Int {
+        
+        return self.companyViewList.count
+    }
+    
+    func shoppingList(_ index: Int) -> ShopingListItemViewModel? {
+        guard self.shoppingViewList.count > index else { return nil }
+        
+        return self.shoppingViewList[index]
+    }
+}
+
+extension SearchCompanyView: ShoppingListDelegate {
+    func shoppingList(didSelect index: Int) {
+        
     }
 }

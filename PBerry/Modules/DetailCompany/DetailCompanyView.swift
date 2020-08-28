@@ -108,12 +108,16 @@ extension DetailCompanyView: ProductListDataSource {
 }
 
 extension DetailCompanyView: ProductListDelegate {
-    func productList(appendToFavorite index: Int) {
-        
+    func productList(appendToShoppingList index: Int) {
+        //Список покупок
     }
     
     func productList(appendToCart index: Int) {
+        let alertNotification = UIAlertController(title: "Уведомление", message: "На данном этапе разработки, этот функционал не поддерживается", preferredStyle: .alert) 
         
+        let actionCancel = UIAlertAction(title: "Отмена", style: .cancel)
+        alertNotification.addAction(actionCancel)
+        self.present(alertNotification, animated: true)
     }
 }
 

@@ -43,7 +43,8 @@ extension SearchCompanyPresenter: SearchCompanyPresenterDataSource {
         ServiceLocator.shared.getCompanyServices().fetchCompany(model: model, successful: { list in
             self.list = list
             let list = self.mapping(list: list)
-            self.delegate?.response(list: list)
+            self.delegate?.response(companyList: list)
+            self.delegate?.response(shoppingList: [ShopingListItemViewModel(name: "Хлеб", status: true)])
         }, failure: { error in
             self.delegate?.response(error: error)
         })

@@ -53,7 +53,7 @@ extension ShoppingListView: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ProductCellIdentifier") as! ShoppingListItemCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ProductCellIdentifier", for: indexPath) as! ShoppingListItemCell
         
         return cell
     }
@@ -70,5 +70,9 @@ extension ShoppingListView: UITableViewDelegate {
                 self.delegate?.shoppingList(didSelect: indexPath.row)
             }
         }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }

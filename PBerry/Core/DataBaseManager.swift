@@ -47,14 +47,15 @@ class DataBaseManager {
         }
     }
     
-    func removeAll<T>(type: T.Type) where T: Object  {
+    func removeAll<T>(type: T.Type, successful: (() -> ()), failure: ((NSError) -> ())) where T: Object  {
         do {
             try self.realm?.write {
                 guard let objects = self.realm?.objects(T.self) else { return }
                 self.realm?.delete(objects)
+                successful()
             }
         } catch {
-            print(error)
+            failure(error as NSError)
         }
     }
     

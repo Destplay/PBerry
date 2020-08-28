@@ -77,6 +77,7 @@ class SearchScreenView: UIViewController {
         self.navigationItem.searchController = self.searchController
         self.definesPresentationContext = true
         self.tabBar.delegate = self
+        UIBarButtonItem.appearance(whenContainedInInstancesOf: [UISearchBar.self]).title = "Отмена"
     }
     
     private func find() {
@@ -179,8 +180,8 @@ extension SearchScreenView: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
         switch self.currentTab {
             case .companyList:
-                self.findValue = searchController.searchBar.text
                 if let text = searchController.searchBar.text, text.count >= 3 {
+                    self.findValue = searchController.searchBar.text
                     self.find()
                 }
             case .shoppingList:

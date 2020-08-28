@@ -124,9 +124,12 @@ extension DetailCompanyView: ProductListDelegate {
 }
 
 extension DetailCompanyView: MapCompanyDataSource {
-    func mapCompany(_ mapView: MKMapView) -> CLLocationCoordinate2D? {
+    
+    func mapCompany(_ mapView: MKMapView) -> MapViewModel? {
+        let location = CLLocationCoordinate2D(latitude: self.company?.latloc ?? 0.0, longitude: self.company?.lonloc ?? 0.0)
+        let mapViewModel = MapViewModel(location: location, title: self.company?.companyName, subtitle: self.company?.description)
         
-        return CLLocationCoordinate2D(latitude: self.company?.latloc ?? 0.0, longitude: self.company?.lonloc ?? 0.0)
+        return mapViewModel
     }
 }
 

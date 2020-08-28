@@ -51,7 +51,7 @@ extension CompanyListView: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CompanyCellIdentifier") as! CompanyViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "CompanyCellIdentifier", for: indexPath) as! CompanyViewCell
         
         return cell
     }
@@ -68,5 +68,6 @@ extension CompanyListView: UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.delegate?.companyList(didSelect: indexPath.row)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }

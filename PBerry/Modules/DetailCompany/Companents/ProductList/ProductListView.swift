@@ -71,7 +71,7 @@ extension ProductListView: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ProductViewCellIdentifier") as! ProductViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ProductViewCellIdentifier", for: indexPath) as! ProductViewCell
         
         return cell
     }
@@ -87,5 +87,9 @@ extension ProductListView: UITableViewDelegate {
                 self.alert(index: indexPath.row)
             }
         }
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
     }
 }

@@ -77,6 +77,10 @@ extension SearchScreenPresenter: SearchScreenPresenterDataSource {
     }
     
     func removeAllShoppingList() {
-        DataBaseManager.shared.removeAll(type: ShoppingListModel.self)
+        DataBaseManager.shared.removeAll(type: ShoppingListModel.self, successful: {
+            self.getShoppingList(nil)
+        }, failure: { error in
+            print(error)
+        })
     }
 }

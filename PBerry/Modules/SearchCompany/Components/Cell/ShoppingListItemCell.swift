@@ -8,14 +8,22 @@
 
 import UIKit
 
-class ShopingListItemCell: UITableViewCell {
+class ShoppingListItemCell: UITableViewCell {
 
     @IBOutlet weak var nameProductLabel: UILabel!
     @IBOutlet weak var statusSwitch: UISwitch!
 
-    func setup(product: ShopingListItemViewModel) {
+    var action: (() -> ())?
+    
+    func setup(product: ShoppingListItemViewModel) {
         self.nameProductLabel.text = product.name
         self.statusSwitch.isOn = product.status
     }
 
+    @IBAction func actionSwitch(_ sender: Any) {
+        if let action = action {
+            action()
+        }
+    }
+    
 }

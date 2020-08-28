@@ -18,7 +18,7 @@ class DetailCompanyView: UIViewController {
     @IBOutlet weak var infoCompanyComponent: UIView!
     @IBOutlet weak var feedbackCompanyComponent: UIView!
     
-    var company: SearchCompanyResponse.Content?
+    var company: SearchScreenResponse.Content?
     var location: CLLocation?
     
     private var productViewList: [ProductViewModel]?
@@ -109,7 +109,9 @@ extension DetailCompanyView: ProductListDataSource {
 
 extension DetailCompanyView: ProductListDelegate {
     func productList(appendToShoppingList index: Int) {
-        //Список покупок
+        guard let list = self.productViewList, list.count > index else { return }
+        
+        self.dataSource?.save(toShopingList: list[index])
     }
     
     func productList(appendToCart index: Int) {

@@ -10,7 +10,7 @@ import UIKit
 
 protocol ShoppingListDataSource {
     /// Метод для получения модели компании
-    func shoppingList(_ index: Int) -> ShopingListItemViewModel?
+    func shoppingList(_ index: Int) -> ShoppingListItemViewModel?
     
     /// Метод для получения количество элементов в списке
     func shoppingList() -> Int
@@ -36,7 +36,6 @@ class ShoppingListView: UIViewController {
     
     func updateView() {
         self.tableView.reloadData()
-        self.tableView?.isHidden = self.dataSource?.shoppingList() == 0
     }
     
     private func configView() {
@@ -54,7 +53,7 @@ extension ShoppingListView: UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ProductCellIdentifier") as! ShopingListItemCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "ProductCellIdentifier") as! ShoppingListItemCell
         
         return cell
     }
@@ -62,14 +61,14 @@ extension ShoppingListView: UITableViewDataSource {
 
 extension ShoppingListView: UITableViewDelegate {
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
-        if let cell = cell as? ShopingListItemCell {
+        if let cell = cell as? ShoppingListItemCell {
             guard let product = self.dataSource?.shoppingList(indexPath.row) else { return }
             
             cell.setup(product: product)
+            
+            cell.action = {
+                self.delegate?.shoppingList(didSelect: indexPath.row)
+            }
         }
-    }
-    
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        self.delegate?.shoppingList(didSelect: indexPath.row)
     }
 }

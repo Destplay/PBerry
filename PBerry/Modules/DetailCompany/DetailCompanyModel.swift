@@ -12,6 +12,7 @@ protocol DetailCompanyPresenterDataSource: class {
     func fetchProductList(_ id: Int?)
     func fetchCommentList(_ id: Int?)
     func sendFeedback(_ id: Int?, status: String, feedback: FeedbackModel)
+    func save(toShopingList product: ProductViewModel)
 }
 
 protocol DetailCompanyViewDelegate: class {

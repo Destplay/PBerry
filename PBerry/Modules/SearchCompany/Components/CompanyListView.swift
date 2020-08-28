@@ -35,7 +35,6 @@ class CompanyListView: UIViewController {
     
     func updateView() {
         self.tableView.reloadData()
-        self.tableView?.isHidden = self.dataSource?.companyList() == 0
     }
     
     private func configView() {

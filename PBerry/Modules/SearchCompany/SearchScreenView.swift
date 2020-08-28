@@ -9,21 +9,23 @@
 import UIKit
 import CoreLocation
 
-class SearchCompanyView: UIViewController {
+class SearchScreenView: UIViewController {
         
     @IBOutlet weak var companyListContainer: UIView!
     @IBOutlet weak var shopingListContainer: UIView!
     @IBOutlet weak var tabBar: UITabBar!
+    @IBOutlet weak var rightButtonItem: UIBarButtonItem!
     
     private let locationManager = CLLocationManager()
     private let searchController = UISearchController(searchResultsController: nil)
     private var currentLocation: CLLocation?
-    private var dataSource: SearchCompanyPresenterDataSource?
+    private var dataSource: SearchScreenPresenterDataSource?
     private var companyViewList = [CompanyViewModel]()
-    private var shoppingViewList = [ShopingListItemViewModel]()
+    private var shoppingViewList = [ShoppingListItemViewModel]()
     private var findValue: String?
     private var companyListView: CompanyListView?
     private var shoppingListView: ShoppingListView?
+    private var currentTab = SearchScreenType.companyList
     
     override func loadView() {
         super.loadView()
@@ -38,7 +40,7 @@ class SearchCompanyView: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.dataSource = SearchCompanyPresenter(view: self)
+        self.dataSource = SearchScreenPresenter(view: self)
         self.configView()
         self.setTab(type: .companyList)
     }
@@ -89,13 +91,21 @@ class SearchCompanyView: UIViewController {
             case .companyList:
                 self.companyListContainer.isHidden = false
                 self.find()
+                self.rightButtonItem.image = UIImage(systemName: "slider.horizontal.below.rectangle")
+                self.searchController.searchBar.text = self.findValue
             case .notification: break
-            case .shoppingList: self.shopingListContainer.isHidden = false
+            case .shoppingList:
+                self.shopingListContainer.isHidden = false
+                self.dataSource?.getShoppingList(nil)
+                self.rightButtonItem.image = UIImage(systemName: "trash")
+                self.searchController.searchBar.text = ""
             case .cart: break
         }
+        
+        self.currentTab = type
     }
     
-    @IBAction func actionSort(_ sender: Any) {
+    private func alertSortCompany() {
         let alert = UIAlertController(title: "Сортировка", message: "Сортировать список по:", preferredStyle: .actionSheet)
         alert.addAction(UIAlertAction(title: "Рейтингу", style: .default) { _ in
             self.dataSource?.setSort(sort: .rating)
@@ -111,21 +121,32 @@ class SearchCompanyView: UIViewController {
         self.present(alert, animated: true)
     }
     
+    @IBAction func actionRightButton(_ sender: Any) {
+        switch self.currentTab {
+            case .companyList:
+                self.alertSortCompany()
+            case .shoppingList:
+                self.dataSource?.removeAllShoppingList()
+            default:
+                break
+        }
+    }
+    
 }
 
-extension SearchCompanyView: CLLocationManagerDelegate {
+extension SearchScreenView: CLLocationManagerDelegate {
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         self.currentLocation = locations.last
     }
 }
 
-extension SearchCompanyView: SearchCompanyViewDelegate {
+extension SearchScreenView: SearchScreenViewDelegate {
     func response(companyList list: [CompanyViewModel]) {
         self.companyViewList = list
         self.companyListView?.updateView()
     }
     
-    func response(shoppingList list: [ShopingListItemViewModel]) {
+    func response(shoppingList list: [ShoppingListItemViewModel]) {
         self.shoppingViewList = list
         self.shoppingListView?.updateView()
     }
@@ -135,7 +156,7 @@ extension SearchCompanyView: SearchCompanyViewDelegate {
     }
 }
 
-extension SearchCompanyView: CompanyListDataSource {
+extension SearchScreenView: CompanyListDataSource {
     func companyList() -> Int {
         
         return self.companyViewList.count
@@ -148,42 +169,51 @@ extension SearchCompanyView: CompanyListDataSource {
     }
 }
 
-extension SearchCompanyView: CompanyListDelegate {
+extension SearchScreenView: CompanyListDelegate {
     func companyList(didSelect index: Int) {
         self.performSegue(withIdentifier: "DetailCompanySegue", sender: index)
     }
 }
 
-extension SearchCompanyView: UISearchResultsUpdating {
+extension SearchScreenView: UISearchResultsUpdating {
     func updateSearchResults(for searchController: UISearchController) {
-        self.findValue = searchController.searchBar.text
-        if let text = searchController.searchBar.text, text.count >= 3 {
-            self.find()
+        switch self.currentTab {
+            case .companyList:
+                self.findValue = searchController.searchBar.text
+                if let text = searchController.searchBar.text, text.count >= 3 {
+                    self.find()
+                }
+            case .shoppingList:
+                if let text = searchController.searchBar.text {
+                    self.dataSource?.getShoppingList(text.count >= 1 ? text : nil)
+                }
+            default:
+                break
         }
     }
 }
 
-extension SearchCompanyView: UITabBarDelegate {
+extension SearchScreenView: UITabBarDelegate {
     func tabBar(_ tabBar: UITabBar, didSelect item: UITabBarItem) {
         self.setTab(type: SearchScreenType(rawValue: item.tag) ?? .companyList)
     }
 }
 
-extension SearchCompanyView: ShoppingListDataSource {
+extension SearchScreenView: ShoppingListDataSource {
     func shoppingList() -> Int {
         
-        return self.companyViewList.count
+        return self.shoppingViewList.count
     }
     
-    func shoppingList(_ index: Int) -> ShopingListItemViewModel? {
+    func shoppingList(_ index: Int) -> ShoppingListItemViewModel? {
         guard self.shoppingViewList.count > index else { return nil }
         
         return self.shoppingViewList[index]
     }
 }
 
-extension SearchCompanyView: ShoppingListDelegate {
+extension SearchScreenView: ShoppingListDelegate {
     func shoppingList(didSelect index: Int) {
-        
+        self.dataSource?.setShoppingList(index: index)
     }
 }

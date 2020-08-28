@@ -117,7 +117,7 @@
         <!--Поиск-->
         <scene sceneID="Pz7-00-6UU">
             <objects>
-                <viewController modalPresentationStyle="fullScreen" id="N0Y-ow-vTw" customClass="SearchCompanyView" customModule="PBerry" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController modalPresentationStyle="fullScreen" id="N0Y-ow-vTw" customClass="SearchScreenView" customModule="PBerry" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="oVp-JP-AF0">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -168,13 +168,14 @@
                         <barButtonItem key="rightBarButtonItem" image="slider.horizontal.below.rectangle" catalog="system" style="plain" id="oat-mT-2Ve">
                             <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                             <connections>
-                                <action selector="actionSort:" destination="N0Y-ow-vTw" id="gP0-4H-kfY"/>
+                                <action selector="actionRightButton:" destination="N0Y-ow-vTw" id="gP0-4H-kfY"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                     <simulatedNavigationBarMetrics key="simulatedTopBarMetrics" prompted="NO"/>
                     <connections>
                         <outlet property="companyListContainer" destination="ki8-1z-hUI" id="wdh-iY-GsW"/>
+                        <outlet property="rightButtonItem" destination="oat-mT-2Ve" id="l2P-sj-5Lq"/>
                         <outlet property="shopingListContainer" destination="vXB-48-RCX" id="FeK-mq-JEZ"/>
                         <outlet property="tabBar" destination="JtB-Ta-zfv" id="XcS-xu-929"/>
                         <segue destination="PCI-ZL-pfb" kind="show" identifier="DetailCompanySegue" id="fXf-ox-EtO"/>
@@ -224,7 +225,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="414" height="725"/>
                                 <color key="backgroundColor" red="0.95250636339999994" green="0.93013757470000002" blue="0.89411336180000001" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ProductCellIdentifier" rowHeight="44" id="WQI-B2-jsk" customClass="ShopingListItemCell" customModule="PBerry" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="ProductCellIdentifier" rowHeight="44" id="WQI-B2-jsk" customClass="ShoppingListItemCell" customModule="PBerry" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="414" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="WQI-B2-jsk" id="Q56-2E-YSc">
@@ -236,12 +237,15 @@
                                                     <constraints>
                                                         <constraint firstAttribute="width" secondItem="6tb-Z3-7Gd" secondAttribute="height" multiplier="133:11" id="kQF-zC-TUD"/>
                                                     </constraints>
-                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Nqn-qF-xuF">
                                                     <rect key="frame" x="343" y="6.5" width="51" height="31"/>
+                                                    <connections>
+                                                        <action selector="actionSwitch:" destination="WQI-B2-jsk" eventType="valueChanged" id="YoZ-kb-t1z"/>
+                                                    </connections>
                                                 </switch>
                                             </subviews>
                                             <constraints>

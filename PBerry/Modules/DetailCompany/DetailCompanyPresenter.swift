@@ -68,4 +68,9 @@ extension DetailCompanyPresenter: DetailCompanyPresenterDataSource {
             self.delegate?.response(error: error)
         })
     }
+    
+    func save(toShopingList product: ProductViewModel) {
+        let shoppingListModel = ShoppingListModel(name: product.productName, status: false)
+        DataBaseManager.shared.saveDataBase(model: shoppingListModel)
+    }
 }

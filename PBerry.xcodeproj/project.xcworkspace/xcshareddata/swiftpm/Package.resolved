@@ -9,6 +9,24 @@
           "revision": "241655eb25394f59d1f6403e8820111f1fe11978",
           "version": null
         }
+      },
+      {
+        "package": "Realm",
+        "repositoryURL": "https://github.com/realm/realm-cocoa.git",
+        "state": {
+          "branch": "master",
+          "revision": "d22f52d4df61de96029efd252e0a08166bf1359f",
+          "version": null
+        }
+      },
+      {
+        "package": "RealmCore",
+        "repositoryURL": "https://github.com/realm/realm-core",
+        "state": {
+          "branch": null,
+          "revision": "b7c49bb107cfc933016792e78fc5daa2aca71a14",
+          "version": "6.0.19"
+        }
       }
     ]
   },

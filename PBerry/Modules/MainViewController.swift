@@ -20,7 +20,7 @@ class MainViewController: UIViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         guard let navigationController = segue.destination as? UINavigationController,
-            let controller = navigationController.topViewController as? SearchCompanyView else { return }
+            let controller = navigationController.topViewController as? SearchScreenView else { return }
         
         if let text = self.searchTextField.text, text.count >= 3 {
             controller.setFind(value: text)

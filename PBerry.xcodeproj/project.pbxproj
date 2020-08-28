@@ -123,6 +123,7 @@
 				64B006B124EAA58D002435A2 /* Log.swift */,
 				645A27A624F8CAB100AB3043 /* DateBaseModels.swift */,
 				645A27A824F902D900AB3043 /* CacheManager.swift */,
+				64F4DD3824DEE64400A3670F /* Extension.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -251,7 +252,6 @@
 				645A279D24F8C75C00AB3043 /* Modules */,
 				64BBFBB424F5E08900648CAE /* Services */,
 				645A279C24F8C75600AB3043 /* Core */,
-				64F4DD3824DEE64400A3670F /* Extension.swift */,
 				64C1019D24DC205C009A298D /* Assets.xcassets */,
 				64C1019F24DC205C009A298D /* LaunchScreen.storyboard */,
 				64C101A224DC205C009A298D /* Info.plist */,
